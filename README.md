@@ -6,6 +6,8 @@ DOMAIN="your.docker-registry.com"
 
 All k8s manifests are in subfolders.
 
+Docker registry without authentication - can be enabled in deployment.
+
 ## How to deploy
 
 AWS ACM and Network Load Balancer are used.
