@@ -1,0 +1,32 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: docker-registry-cron
+  namespace: docker-registry
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: docker-registry-cron
+        spec:
+          containers:
+          - name: docker-registry-cron
+            image: registry:latest
+            args:
+            - /bin/registry
+            - garbage-collect
+            - --dry-run
+            - /etc/docker/registry/config.yml
+            envFrom:
+            - configMapRef:
+                name: registry
+            volumeMounts:
+            - name: image-data
+              mountPath: /var/lib/registry
+          restartPolicy: OnFailure
+          volumes:
+            - name: image-data
+              persistentVolumeClaim:
+                claimName: docker-registry
